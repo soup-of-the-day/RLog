@@ -1,18 +1,24 @@
 package main
 
 import (
-	. "./practice_log"
 	"fmt"
+	"os"
+	. "./commands"
 )
 
 func main() {
-	pLog, err := ParseRudiments("rudiments.csv")
+	command, err := CreateCommand(os.Args)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to parsed file: %s", err))
+		panic(err)
 	}
-	entries := pLog.GetRandomEntries(5)
-	fmt.Println(" -------- Rudiments to Practice ------- ")
-	for _, entry := range entries {
-		fmt.Println(entry.Name, entry.BPM)
+	err = command.CheckArgs()
+	if err != nil {
+		fmt.Println("----- Incorrect program arguments -----")
+		fmt.Println(command.Usage())
+		os.Exit(1)
+	}
+	err = command.Execute()
+	if err != nil {
+		panic(err)
 	}
 }

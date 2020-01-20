@@ -9,7 +9,7 @@ import (
 
 // Command for starting a practice session.
 type StartCommand struct {
-	args []string
+	commandArgs []string
 }
 
 // Should start a practice session by printing out some random number of rudiments and their respective BPMs.
@@ -18,7 +18,7 @@ func (c *StartCommand) Execute() error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Failed to parsed file: %s", err))
 	}
-	numEntries, _ := strconv.ParseInt(c.args[0], 10, 0)
+	numEntries, _ := strconv.ParseInt(c.commandArgs[0], 10, 0)
 	entries := pLog.GetRandomEntries(int(numEntries))
 	fmt.Println(" -------- Rudiments to Practice ------- ")
 	for _, entry := range entries {
@@ -34,7 +34,7 @@ func (c *StartCommand) Usage() string {
 
 // This command should only accept a single integer indicating the number of rudiments to practice
 func (c *StartCommand) CheckArgs() error {
-	_, err := strconv.ParseInt(c.args[0], 10, 0) // Only break if first arg can't be turned into an int
+	_, err := strconv.ParseInt(c.commandArgs[0], 10, 0) // Only break if first arg can't be turned into an int
 	if err != nil {
 		return err
 	}

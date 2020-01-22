@@ -15,12 +15,18 @@ type Command interface {
 	CheckArgs() error
 }
 
-// Creates an appropriate Command for the given list of arguments. If the command doesn't exist, return error.
+// Creates an appropriate Command for the list of arguments. If the command doesn't exist, error
 func CreateCommand(args []string) (Command, error) {
+	if len(args) <= 1 {
+		return nil, errors.New("Expect at least one argument: start or end\n");
+	}
 	command := args[1]
 	switch command {
 	case "start":
+		// TODO: CreateCommand shouldn't know that Start needs 2 args. Makes error handling weird. Move into Start.
 		return &StartCommand{args[2:]}, nil
+	case "end":
+		return &EndCommand{args[2:]}, nil
 	}
 
 	return nil, errors.New(fmt.Sprintf("Unsupported Command: %s", command))

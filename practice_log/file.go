@@ -3,7 +3,9 @@ package practice_log
 
 import (
 	"encoding/csv"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strconv"
 )
@@ -31,4 +33,24 @@ func ParseRudiments(filename string) (*PracticeLog, error) {
 		}
 	}
 	return NewPracticeLog(log), nil
+}
+
+// Save the contents of a practice log as a csv file
+//csv format: <abbrev>,<bpm>,<name>
+func SaveRudiments(p *PracticeLog, filename string) error {
+	csvString := CsvStringFromLog(p)
+	err := ioutil.WriteFile(filename, []byte(csvString), 0644)
+	if err != nil {
+		return err
+	}
+	return nil;
+}
+
+// Turn a practice log into csv-formatted string
+func CsvStringFromLog(p *PracticeLog) string {
+	csvString := ""
+	for tla, l := range p.Log {
+		csvString = csvString + fmt.Sprintf("%s,%d,%s\n", tla, l.BPM, l.Name)
+	}
+	return csvString
 }

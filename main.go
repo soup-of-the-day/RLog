@@ -1,5 +1,6 @@
 package main
 
+// TODO - Use go modules instead of these relative imports...
 import (
 	"fmt"
 	"os"
@@ -9,16 +10,18 @@ import (
 func main() {
 	command, err := CreateCommand(os.Args)
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 	err = command.CheckArgs()
 	if err != nil {
-		fmt.Println("----- Incorrect program arguments -----")
+		fmt.Println("----- Invalid program arguments -----")
 		fmt.Println(command.Usage())
 		os.Exit(1)
 	}
 	err = command.Execute()
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 }

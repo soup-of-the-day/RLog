@@ -2,6 +2,8 @@ package commands
 
 import (
 	"../practice_log"
+	"errors"
+	"fmt"
 	"strconv"
 )
 
@@ -48,8 +50,30 @@ func (c *EndCommand) Usage() string {
 	return "end [ (<3-letter abbreviation of rudiment>, <BPM you attained>)  .... ]"
 }
 
+
+
 // Reject arguments that aren't handed in as a list of tuples (<abbrev>,<bpm>)
 func (c *EndCommand) CheckArgs() error {
+	argsCopy := c.commandArgs[0:]
+	if (len(argsCopy) % 2) != 0 {
+		return errors.New("list of arguments must be made up of tuples of 2")
+	}
+	var err error
+	for len(argsCopy) > 0 {
+		// Break if the first item of the tuple pair can't be converted to an int
+		_, err = strconv.ParseInt(argsCopy[1], 10, 32)
+		if err != nil {
+			errorMsg := fmt.Sprintf("tuples in list of args must be of form <string>,<int> but got: <%s>,<%s>",
+										argsCopy[0],
+										argsCopy[1])
+			return errors.New(errorMsg)
+		}
+		if !practice_log.ValidAbbreviation(argsCopy[0]) {
+			errorMsg := fmt.Sprintf("Unrecognized three letter rudiment abbreviation: %s", argsCopy[0])
+			return errors.New(errorMsg)
+		}
+		argsCopy = argsCopy[2:]
+	}
 	return nil
 }
 

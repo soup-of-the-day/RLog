@@ -16,7 +16,8 @@ func main() {
 	err = command.CheckArgs()
 	if err != nil {
 		fmt.Println("----- Invalid program arguments -----")
-		fmt.Println(command.Usage())
+		fmt.Println(err.Error())
+		fmt.Println("Command usage: ", command.Usage())
 		os.Exit(1)
 	}
 	err = command.Execute()

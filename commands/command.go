@@ -23,10 +23,9 @@ func CreateCommand(args []string) (Command, error) {
 	command := args[1]
 	switch command {
 	case "start":
-		// TODO: CreateCommand shouldn't know that Start needs 2 args. Makes error handling weird. Move into Start.
-		return &StartCommand{args[2:]}, nil
+		return &StartCommand{args}, nil
 	case "end":
-		return &EndCommand{args[2:]}, nil
+		return &EndCommand{args}, nil
 	}
 
 	return nil, errors.New(fmt.Sprintf("Unsupported Command: %s", command))

@@ -33,9 +33,10 @@ func (c *StartCommand) Usage() string {
 }
 
 // This command should only accept a single integer indicating the number of rudiments to practice
+// Args should look like: ./program_name start <int>
 func (c *StartCommand) CheckArgs() error {
-	// Only break if first arg can't be turned into an int
-	_, err := strconv.ParseInt(c.commandArgs[0], 10, 0)
+	// Only break if third arg can't be turned into an int
+	_, err := strconv.ParseInt(c.commandArgs[2], 10, 0)
 	if err != nil {
 		return err
 	}

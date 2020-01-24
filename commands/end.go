@@ -16,6 +16,7 @@ type EndCommand struct {
 func (e *EndCommand) updatePLogEntries(p *practice_log.PracticeLog) error {
 	var bpm int64
 	var err error
+	e.commandArgs = e.commandArgs[2:] // First two args are: ./program_name end ...
 	for len(e.commandArgs) > 0 {
 		bpm, err = strconv.ParseInt(e.commandArgs[1], 10, 64)
 		if err != nil {
@@ -28,7 +29,7 @@ func (e *EndCommand) updatePLogEntries(p *practice_log.PracticeLog) error {
 	return nil
 }
 
-// Update the csv with commandArgs and hope it is formatted correctly I guess
+// Update the csv file and "end" a practice session
 func (e *EndCommand) Execute() error {
 	plog, err := practice_log.ParseRudiments("rudiments.csv")
 	if err != nil {
@@ -53,23 +54,31 @@ func (c *EndCommand) Usage() string {
 
 
 // Reject arguments that aren't handed in as a list of tuples (<abbrev>,<bpm>)
+// Args should look like: ./program_name end (_, _) (_, _) .... (_, _)
 func (c *EndCommand) CheckArgs() error {
 	argsCopy := c.commandArgs[0:]
+	if len(argsCopy) < 4 {
+		return errors.New("did not receive enough arguments. need at least one tuple in list of items")
+	}
+	argsCopy = argsCopy[2:]
 	if (len(argsCopy) % 2) != 0 {
 		return errors.New("list of arguments must be made up of tuples of 2")
 	}
 	var err error
+	var tla, bpm string
 	for len(argsCopy) > 0 {
+		tla = argsCopy[0]
+		bpm = argsCopy[1]
 		// Break if the first item of the tuple pair can't be converted to an int
-		_, err = strconv.ParseInt(argsCopy[1], 10, 32)
+		_, err = strconv.ParseInt(bpm, 10, 32)
 		if err != nil {
 			errorMsg := fmt.Sprintf("tuples in list of args must be of form <string>,<int> but got: <%s>,<%s>",
-										argsCopy[0],
-										argsCopy[1])
+										tla,
+										bpm)
 			return errors.New(errorMsg)
 		}
-		if !practice_log.ValidAbbreviation(argsCopy[0]) {
-			errorMsg := fmt.Sprintf("Unrecognized three letter rudiment abbreviation: %s", argsCopy[0])
+		if !practice_log.ValidAbbreviation(tla) {
+			errorMsg := fmt.Sprintf("Unrecognized three letter rudiment abbreviation: %s", tla)
 			return errors.New(errorMsg)
 		}
 		argsCopy = argsCopy[2:]

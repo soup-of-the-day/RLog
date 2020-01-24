@@ -17,7 +17,7 @@ func NewPracticeLog(entriesMap map[string]*PracticeEntry) *PracticeLog {
 	}
 }
 
-// Get random entries from the list for practice.
+// Get random entries from the list for practice
 func (p *PracticeLog) GetRandomEntries(numEntries int) []*PracticeEntry {
 	entries := make([]*PracticeEntry, 0)
 	for _, entry := range p.Log { // ranging over a map returns elements in some random order

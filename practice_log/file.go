@@ -36,9 +36,9 @@ func ParseRudiments(filename string) (*PracticeLog, error) {
 }
 
 // Save the contents of a practice log as a csv file
-//csv format: <abbrev>,<bpm>,<name>
+// csv format: <abbrev>,<bpm>,<name>
 func SaveRudiments(p *PracticeLog, filename string) error {
-	csvString := CsvStringFromLog(p)
+	csvString := csvStringFromLog(p)
 	err := ioutil.WriteFile(filename, []byte(csvString), 0644)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func SaveRudiments(p *PracticeLog, filename string) error {
 }
 
 // Turn a practice log into csv-formatted string
-func CsvStringFromLog(p *PracticeLog) string {
+func csvStringFromLog(p *PracticeLog) string {
 	csvString := ""
 	for tla, l := range p.Log {
 		csvString = csvString + fmt.Sprintf("%s,%d,%s\n", tla, l.BPM, l.Name)

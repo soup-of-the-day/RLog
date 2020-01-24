@@ -18,7 +18,7 @@ func (c *StartCommand) Execute() error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("Failed to parsed file: %s", err))
 	}
-	numEntries, _ := strconv.ParseInt(c.commandArgs[0], 10, 0)
+	numEntries, _ := strconv.ParseInt(c.commandArgs[2], 10, 0)
 	entries := pLog.GetRandomEntries(int(numEntries))
 	fmt.Println(" -------- Rudiments to Practice ------- ")
 	for _, entry := range entries {

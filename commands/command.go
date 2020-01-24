@@ -18,7 +18,7 @@ type Command interface {
 // Creates an appropriate Command for the list of arguments. If the command doesn't exist, error
 func CreateCommand(args []string) (Command, error) {
 	if len(args) <= 1 {
-		return nil, errors.New("Expect at least one argument: start or end\n");
+		return nil, errors.New("expected at least one argument")
 	}
 	command := args[1]
 	switch command {
